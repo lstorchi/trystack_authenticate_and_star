@@ -2,8 +2,8 @@ import requests
 import json
 import os
 
-userid = str( os.getenv( "USERID" ))
-password = str( os.getenv( "PASSWORD"))
+userid = str( os.getenv( "OS_USERNAME" ))
+password = str( os.getenv( "OS_PASSWORD"))
 
 # get tokenid
 url = 'http://x86.trystack.org:5000/v2.0/tokens'
@@ -37,7 +37,7 @@ headers = {'content-type': 'application/json'}
 payload = {'auth':{'passwordCredentials':{'username': userid, \
     'password':password}, 'tenantId':str(tenatid)}}
 r = requests.post(url, data=json.dumps(payload), headers=headers)
-#print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
+print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
 json_data = r.json()
 r.close
 tokens = json.loads(json.dumps(json_data))
@@ -55,7 +55,7 @@ for item in tokens['access']['serviceCatalog']:
 url = publicURL + "/v2/meters/"
 headers = {'X-Auth-Token':str(tokenid)}
 r = requests.get(url, headers=headers)
-#print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
+print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
 json_data = r.json()
 r.close()
 tokens = json.loads(json.dumps(json_data))
