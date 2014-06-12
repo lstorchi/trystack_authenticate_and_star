@@ -2,6 +2,8 @@ import requests
 import json
 import os
 
+from sets import Set
+
 userid = str( os.getenv( "OS_USERNAME" ))
 password = str( os.getenv( "OS_PASSWORD"))
 
@@ -37,7 +39,7 @@ headers = {'content-type': 'application/json'}
 payload = {'auth':{'passwordCredentials':{'username': userid, \
     'password':password}, 'tenantId':str(tenatid)}}
 r = requests.post(url, data=json.dumps(payload), headers=headers)
-print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
+#print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
 json_data = r.json()
 r.close
 tokens = json.loads(json.dumps(json_data))
@@ -55,9 +57,26 @@ for item in tokens['access']['serviceCatalog']:
 url = publicURL + "/v2/meters/"
 headers = {'X-Auth-Token':str(tokenid)}
 r = requests.get(url, headers=headers)
-print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
+#print json.dumps(r.json(), sort_keys=True, indent=4, separators=(',', ': '))
 json_data = r.json()
 r.close()
 tokens = json.loads(json.dumps(json_data))
+projects = Set()
+users = Set()
 for item in tokens:
-  print item
+  projects.add(item['project_id'])
+  users.add(item['user_id'])
+  #print item['resource_id']
+
+print "Num. of projects: ", len(projects)
+for proj in projects:
+  print "  ", proj
+
+userid = ""
+print "Num. of users: ", len(users)
+for user in users:
+  print "  ", user
+  if user != "None":
+    userid = user
+
+print "Ask for user: ", userid
